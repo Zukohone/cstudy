@@ -1,0 +1,2 @@
+# cstudy
+simple Algorithm
