@@ -1,119 +1,28 @@
 # include <stdio.h>
-# include <stdlib.h>
+#include<stdlib.h>
+#include<stdbool.h>
 
-typedef struct _Pilha
+bool end=false;
+void checkEnd();
+
+void main()
 {
-    char op;
-    struct _Pilha *prox;
-}Pilha;
-
-void transfereTempPos( Pilha **pPos, Pilha **pTemp, Pilha *aux )
-{
-    aux = ( *pTemp ) -> prox;
-    ( *pTemp ) -> prox = *pPos;
-    *pPos = *pTemp;
-    *pTemp = aux;
-}
-
-void alocaCharNaPilha( Pilha **pilha, Pilha *aux, char op )
-{
-    aux = ( Pilha *) malloc( sizeof( Pilha ) );
-    aux -> op = op;  
-    aux -> prox = *pilha;
-    *pilha = aux;
-}
-
-void leOperacao( Pilha **pPos, Pilha **pTemp )
-{
-    char op;
-    Pilha *aux;
-    
-    scanf( "%c", &op );
-    while( op != '\n' )
-    {      
-
-        switch( op )
-        {
-            case '+':
-            case '-':
-
-                while( ( *pTemp ) && ( (*pTemp) -> op != '(' ) )
-                {
-                    transfereTempPos( &( *pPos ), &( *pTemp ), aux );
-                }
-
-                alocaCharNaPilha( &( *pTemp ), aux, op );
-                
-                break;
-
-            case '*':
-            case '/':
-
-                while( ( *pTemp ) && ( (*pTemp) -> op != '+' && (*pTemp) -> op != '-'
-                        && (*pTemp) -> op != '(' ) )
-                {        
-                    transfereTempPos( &( *pPos ), &( *pTemp ), aux );
-                }
-
-                alocaCharNaPilha( &( *pTemp ), aux, op );
-                
-                break;
-
-            case ')':
-                while( ( *pTemp ) && ( (*pTemp) -> op != '(' ) )
-                {
-                    transfereTempPos( &( *pPos ), &( *pTemp ), aux );
-                }
-
-                if( (*pTemp) && (*pTemp) -> op == '(' )
-                {
-                    aux = *pTemp;
-                    *pTemp = (*pTemp) -> prox;
-                    free( aux );
-                }
-                
-                break;
-
-            case '(':
-                alocaCharNaPilha( &( *pTemp ), aux, op );
-                
-                break;
-
-            default:
-                alocaCharNaPilha( &( *pPos ), aux, op );
-                
-                break;
-        }
-
-        scanf( "%c", &op );
-    }
-
-    while( *pTemp )
+	int a;
+	while (!end) //Enquanta nao termina a expressao ler os valores
 	{
-		transfereTempPos( &( *pPos ), &( *pTemp ), aux );
+	printf("\nDigite um numero: \n");
+    scanf("%d", &a);
+	checkEnd();
 	}
-    
 }
 
-void imprime( Pilha *topo )
-{
-    if( topo )
-    {
-        imprime( topo -> prox );
-        printf( "%c", topo -> op );
-    }   
-}
-
-int main()
-{
-    Pilha *pPos = NULL;
-    Pilha *pTemp = NULL;
-
-    printf( "Operacao Infixa: " );
-    leOperacao( &pPos, &pTemp );
-    printf( "Operacao Posfixa: " );
-    imprime( pPos );
-    printf( "\n" );
-
-    return 0;
+void checkEnd(){
+	int verf=0;
+	printf("\nJa terminou a expressao (0 para terminar)? \n");
+    scanf("%d", &verf);
+	if(verf==0){
+		end = true;
+	}else{
+		end = false;
+	}
 }
