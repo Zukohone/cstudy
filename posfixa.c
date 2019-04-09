@@ -5,7 +5,7 @@
 
 typedef struct _Pilha
 {
-    char op;
+    char digito;
     struct _Pilha *prox;
 }Pilha;
 
@@ -19,30 +19,30 @@ void transfereTempPos( Pilha **pPos, Pilha **pTemp, Pilha *aux )
     *pTemp = aux;
 }
 
-void alocaCharNaPilha( Pilha **pilha, Pilha *aux, char op )
+void addCharNaPilha( Pilha **pilha, Pilha *aux, char digito )
 {
     aux = ( Pilha *) malloc( sizeof( Pilha ) );
-    aux -> op = op;  
+    aux -> digito = digito;  
     aux -> prox = *pilha;
     *pilha = aux;
 }
 
 void leOperacao( Pilha **pPos, Pilha **pTemp )
 {
-    char op;
+    char digito;
     Pilha *aux;
     
-    scanf( "%c", &op );
+    scanf( "%c", &digito );
 
-    while( op != '\n' )
+    while( digito != '\n' )
     {
-		if( !isdigit(op) && op !='+' && op !='-' && op !='*' && op !='/'){
+		if( !isdigit(digito) && digito !='+' && digito !='-' && digito !='*' && digito !='/'){
 			charInvalido = true;
 			printf("Expressao invalida");
 		return;
 		}
 
-        switch( op )
+        switch( digito )
         {
             case '+':
             case '-':
@@ -52,29 +52,29 @@ void leOperacao( Pilha **pPos, Pilha **pTemp )
                     transfereTempPos( &( *pPos ), &( *pTemp ), aux );
                 }
 
-                alocaCharNaPilha( &( *pTemp ), aux, op );
+                addCharNaPilha( &( *pTemp ), aux, digito );
                 
                 break;
 
             case '*':
             case '/':
 
-                while( ( *pTemp ) && ( (*pTemp) -> op != '+' && (*pTemp) -> op != '-') )
+                while( ( *pTemp ) && ( (*pTemp) -> digito != '+' && (*pTemp) -> digito != '-') )
                 {        
                     transfereTempPos( &( *pPos ), &( *pTemp ), aux );
                 }
 
-                alocaCharNaPilha( &( *pTemp ), aux, op );
+                addCharNaPilha( &( *pTemp ), aux, digito );
                 
                 break;
 
             default:
-                alocaCharNaPilha( &( *pPos ), aux, op );
+                addCharNaPilha( &( *pPos ), aux, digito );
                 
                 break;
         }
 
-        scanf( "%c", &op );
+        scanf( "%c", &digito );
     }
 
     while( *pTemp )
@@ -84,12 +84,12 @@ void leOperacao( Pilha **pPos, Pilha **pTemp )
     
 }
 
-void imprime( Pilha *topo )
+void mostraPilha( Pilha *topo )
 {
     if( topo )
     {
-        imprime( topo -> prox );
-        printf( "%c", topo -> op );
+        mostraPilha( topo -> prox );
+        printf( "%c", topo -> digito );
     }   
 }
 
@@ -102,7 +102,7 @@ int main()
     leOperacao( &pPos, &pTemp );
 	if(!charInvalido){
 		printf( "Operacao Posfixa: " );
-		imprime( pPos );
+		mostraPilha( pPos );
 		printf( "\n" );
 	}
 
